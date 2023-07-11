@@ -1,38 +1,17 @@
-'use client';
 import Posts from "@/components/Posts";
 import PostSearch from "@/components/PostSearch";
-import {usePosts} from "@/store";
-import {shallow} from "zustand/shallow";
-import {useEffect} from "react";
+import {Metadata} from "next";
 
-const Blog = () => {
-    const [posts, loading, getAllPosts] = usePosts((state) => [
-        state.posts,
-        state.loading,
-        state.getAllPosts
-    ], shallow);
+export const metadata: Metadata = {
+    title: 'Blog | Next.js + TypeScript + Zustand',
+}
 
-    useEffect(() => {
-        getAllPosts();
-
-    }, [getAllPosts]);
-
+export default function Blog() {
     return (
         <>
             <h1> Blog Page </h1>
             <PostSearch />
-            {
-                loading
-                    ? (
-                        <p>Loading...</p>
-                    )
-                    : (
-                        <Posts posts={posts}/>
-                    )
-            }
-
+            <Posts />
         </>
     );
 };
-
-export default Blog;
