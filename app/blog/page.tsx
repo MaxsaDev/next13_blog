@@ -1,24 +1,26 @@
 'use client';
-
-import { useEffect, useState } from "react";
 import Posts from "@/components/Posts";
-import { getAllPosts } from "@/services/getPosts";
 import PostSearch from "@/components/PostSearch";
+import {usePosts} from "@/store";
+import {shallow} from "zustand/shallow";
+import {useEffect} from "react";
 
 const Blog = () => {
-    const [posts, setPosts] = useState<any []>([]);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [posts, loading, getAllPosts] = usePosts((state) => [
+        state.posts,
+        state.loading,
+        state.getAllPosts
+    ], shallow);
 
     useEffect(() => {
-        getAllPosts()
-            .then((data) => setPosts(data))
-            .finally(() => setLoading(false));
-    }, []);
+        getAllPosts();
+
+    }, [getAllPosts]);
 
     return (
         <>
             <h1> Blog Page </h1>
-            <PostSearch onSearch={setPosts}/>
+            <PostSearch />
             {
                 loading
                     ? (

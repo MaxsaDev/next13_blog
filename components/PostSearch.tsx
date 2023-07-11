@@ -1,18 +1,15 @@
 'use client';
 import {FormEvent, useState} from "react";
-import {getPostsBySearch} from "@/services/getPosts";
+import {usePosts} from "@/store";
 
-type Props = {
-    onSearch: (search: string[]) => void;
-}
 
-const PostSearch = ({onSearch}: Props) => {
+const PostSearch = () => {
     const [search, setSearch] = useState<string>('');
+    const getPostsBySearch = usePosts(state => state.getPostsBySearch);
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const posts = await getPostsBySearch(search);
-        onSearch(posts);
+        await getPostsBySearch(search);
     }
 
     return (
