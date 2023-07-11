@@ -1,36 +1,34 @@
-import type { Metadata } from 'next'
-import Link from "next/link";
-export const metadata: Metadata = {
-    title: 'Blog | Maxsa App',
-    description: 'Blog description',
-}
+'use client';
 
-async function getData() {
-    const response = await fetch('https://jsonplaceholder.typicode.com/posts',{
-        next: {
-            revalidate: 60
-        }
-    });
+import { useEffect, useState } from "react";
+import Posts from "@/components/Posts";
+import { getAllPosts } from "@/services/getPosts";
+import PostSearch from "@/components/PostSearch";
 
-    return response.json();
-}
+const Blog = () => {
+    const [posts, setPosts] = useState<any []>([]);
+    const [loading, setLoading] = useState<boolean>(true);
 
-const Blog = async () => {
-    const post = await getData();
+    useEffect(() => {
+        getAllPosts()
+            .then((data) => setPosts(data))
+            .finally(() => setLoading(false));
+    }, []);
+
     return (
         <>
-            <h1>
-                Blog
-            </h1>
-            <ul>
-                {post.map((post: any) => (
-                    <li key={post.id}>
-                        <Link href={`/blog/${post.id}`}>
-                            {post.title}
-                        </Link>
-                    </li>
-                ))}
-            </ul>
+            <h1> Blog Page </h1>
+            <PostSearch onSearch={setPosts}/>
+            {
+                loading
+                    ? (
+                        <p>Loading...</p>
+                    )
+                    : (
+                        <Posts posts={posts}/>
+                    )
+            }
+
         </>
     );
 };
